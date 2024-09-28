@@ -7,5 +7,5 @@
 3. Uruchom polecenie:
    ```bash
    docker build -t event_calendar .
-   docker run -p 5000:5000 event_calendar
-4. Otwórz przeglądarkę i przejdź do http://localhost:5000
+   docker run -p 8000:8000 event_calendar
+4. Otwórz przeglądarkę i przejdź do http://localhost:8000
