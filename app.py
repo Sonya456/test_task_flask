@@ -47,7 +47,8 @@ def api_events():
         return jsonify([]), 500
 
     filtered_events = []
-    for event in events:
+    for event in events:               
+
         event_start = datetime.strptime(event['start_time'], "%Y-%m-%dT%H:%M:%S")
         if start <= event_start.strftime("%Y-%m-%d") <= end:
             filtered_events.append({
