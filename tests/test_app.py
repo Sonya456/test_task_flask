@@ -12,7 +12,7 @@ class FlaskAppTests(unittest.TestCase):
         self.assertIn('Kalendarz Wydarzeń', response.data.decode('utf-8'))
 
     def test_event_detail(self):
-        response = self.app.get('/event/1')  # Upewnij się, że to ID istnieje w API
+        response = self.app.get('/event/1') 
         self.assertEqual(response.status_code, 200)
         self.assertIn('Opis:', response.data.decode('utf-8'))
 
