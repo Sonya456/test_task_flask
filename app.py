@@ -1,5 +1,5 @@
 from datetime import datetime
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify  # Dodaj tutaj jsonify
 import requests
 
 
@@ -18,16 +18,15 @@ def index():
         response = requests.get(f"{BASE_URL}/events/", headers={"api-key": API_KEY})
 
     events = response.json()
+    
     if response.status_code != 200 or 'detail' in events:
-    # API zwróciło błąd lub tag nie został znaleziony
+        # API zwróciło błąd lub tag nie został znaleziony
         events = []
-        error_message = 'Tag nie został znaleziony.'
+        error_message = 'Tag nie został znaleziony.' if tag else 'Błąd podczas pobierania wydarzeń.'
     else:
         error_message = None
-    
 
     return render_template('index.html', events=events, tag=tag, error_message=error_message)
-
 
 @app.route('/event/<int:event_id>')
 def event_detail(event_id):
@@ -35,6 +34,37 @@ def event_detail(event_id):
     event = response.json()
     return render_template('event_detail.html', event=event)
 
+# Dodaj trasę, która będzie używana przez FullCalendar do pobierania wydarzeń
+@app.route('/api/events')
+def api_events():
+    start = request.args.get('start')
+    end = request.args.get('end')
+    
+    if not start or not end:
+        return jsonify([]), 400  # Zwróć błąd, jeśli brak dat
+
+    # Pobierz wydarzenia w zakresie dat
+    response = requests.get(f"{BASE_URL}/events", headers={"api-key": API_KEY})
+    events = response.json()
+    
+    # Jeśli status kod nie jest 200, zwróć pustą listę
+    if response.status_code != 200:
+        return jsonify([]), 500
+
+    # Filtrowanie wydarzeń na podstawie zakresu dat
+    filtered_events = []
+    for event in events:
+        event_start = datetime.strptime(event['start_time'], "%Y-%m-%dT%H:%M:%S")
+        if start <= event_start.strftime("%Y-%m-%d") <= end:
+            filtered_events.append({
+                'id': event['id'],
+                'title': event['name'],
+                'start': event['start_time'],
+                'description': event['short_description'],
+                # Możesz dodać więcej pól, jeśli potrzebujesz
+            })
+    
+    return jsonify(filtered_events), 200
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=8000)

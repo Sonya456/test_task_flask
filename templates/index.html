@@ -3,39 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.css' rel='stylesheet' />
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <title>Kalendarz Wydarzeń</title>
 </head>
 <body>
-    <div class="container mt-5">
-        <h1>Kalendarz Wydarzeń</h1>
-        <form method="GET" action="/">
-            <div class="form-group">
-                <label for="tag">Filtruj według tagu</label>
-                <input type="text" class="form-control" id="tag" name="tag" placeholder="Wpisz tag" value="{{ tag }}">
-            </div>
-            <button type="submit" class="btn btn-primary">Filtruj</button>
-        </form>
-
-        <table class="table mt-5">
-            <thead>
-                <tr>
-                    <th>Nazwa Wydarzenia</th>
-                    <th>Czas Rozpoczęcia</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for event in events %}
-                <tr>
-                    <td><a href="{{ url_for('event_detail', event_id=event.id) }}">{{ event.name }}</a></td>
-                    <td>{{ event.start_time }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+    <header>
+        <div class="container">
+            <img src="{{ url_for('static', filename='logo.jpg') }}" alt="Logo Uniwersytetu" height="50">
+            <h1>Kalendarz Wydarzeń</h1>
+        </div>
+    </header>
+    <div class="container">
+        <div id="calendar"></div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.js'></script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script> 
 </body>
 </html>
